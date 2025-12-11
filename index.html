@@ -1,305 +1,516 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JewMail — Invite Only</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JewMail — Invite Only (Premium)</title>
+
+<!-- GSAP CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+  /* ---------- THEME / PALETTE ---------- */
+  :root{
+    --bg-1: #f8fbff;
+    --bg-2: #eaf6ff;
+    --primary: #0b3b82; /* deep blue */
+    --accent: #0b64c7;  /* luminous blue */
+    --muted: #6b7280;
+    --glass: rgba(255,255,255,0.65);
+    --glass-2: rgba(255,255,255,0.5);
+    --radius: 16px;
+    --card-shadow: 0 20px 50px rgba(11,52,130,0.08);
+  }
 
-:root {
-    --bg1:#ffffff;
-    --bg2:#f3f3f7;
-    --glass:#ffffff50;
-    --glassBorder:#ffffff40;
-    --text:#111;
-    --textSoft:#555;
-    --radius:18px;
-}
-
-/* ------------- GLOBAL ------------- */
-
-body {
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
     margin:0;
-    background:linear-gradient(145deg, var(--bg1), var(--bg2));
-    font-family:"Inter",sans-serif;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 60%);
+    color:#081026;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
     overflow-x:hidden;
-    color:var(--text);
-}
+  }
 
-/* Fade-in */
-@keyframes fadeUp {
-    0% {opacity:0;transform:translateY(25px);}
-    100% {opacity:1;transform:translateY(0);}
-}
+  /* ---------- LAYOUT ---------- */
+  .wrap{min-height:100vh;display:flex;flex-direction:column}
+  header{padding:28px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;z-index:40;position:relative}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo {
+    width:52px;height:52px;border-radius:12px;
+    background:linear-gradient(135deg, #ffffffee 0%, var(--accent) 100%);
+    box-shadow: 0 8px 28px rgba(11,52,130,0.12), inset 0 -8px 20px rgba(255,255,255,0.6);
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:20px;
+  }
+  .brand h1{font-size:20px;margin:0;letter-spacing:-0.5px}
+  .brand p{margin:0;color:var(--muted);font-size:13px}
 
-/* Gentle float */
-@keyframes float {
-    0%,100% {transform:translateY(0);}
-    50% {transform:translateY(-12px);}
-}
+  .nav-actions{display:flex;gap:12px;align-items:center}
+  .btn {
+    border:0;padding:10px 16px;border-radius:12px;background:transparent;color:var(--primary);cursor:pointer;font-weight:600;
+    transition:all .18s ease;
+  }
+  .btn:hover{transform:translateY(-3px)}
+  .btn-primary{
+    background:linear-gradient(90deg,var(--primary),var(--accent));
+    color:white;box-shadow: 0 14px 40px rgba(11,52,130,0.16);
+  }
 
-/* Ambient glow */
-@keyframes glow {
-    0%,100% {opacity:.15;transform:translate(0,0);}
-    50% {opacity:.3;transform:translate(40px,40px);}
-}
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;padding:28px;display:flex;align-items:center;justify-content:center;
+    min-height:78vh;overflow:visible;
+  }
 
-/* ------------- PARTICLES ------------- */
+  .hero-inner{
+    width:100%;max-width:1200px;display:grid;grid-template-columns:1fr 480px;gap:40px;align-items:center;z-index:10;
+  }
 
-#particles {
-    position:fixed;
-    width:100%;
-    height:100%;
-    top:0;left:0;
-    pointer-events:none;
-    z-index:0;
-}
+  .hero-left{padding:36px 0}
+  .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,#eAF4FF, #ffffff);color:var(--primary);font-weight:700;margin-bottom:18px;font-size:13px}
+  .headline{font-size:44px;line-height:1.02;margin:0 0 14px}
+  .sub{color:var(--muted);font-size:17px;margin:0 0 24px;max-width:56ch}
 
-.particle {
-    position:absolute;
-    width:6px;height:6px;
-    background:#00000010;
-    border-radius:50%;
-    animation: drift 12s infinite linear;
-    filter:blur(1px);
-}
+  .hero-cta-row{display:flex;gap:12px;align-items:center}
+  .cta-input{
+    display:flex;gap:8px;background:var(--glass);backdrop-filter: blur(8px);padding:10px;border-radius:12px;border:1px solid rgba(8,16,38,0.05);
+    align-items:center;box-shadow:var(--card-shadow);
+  }
+  .cta-input input{border:0;background:transparent;padding:8px 10px;width:220px;font-size:15px;outline:none}
+  .small-hint{font-size:13px;color:var(--muted);margin-top:8px}
 
-@keyframes drift {
-    0% {transform:translateY(0) translateX(0);}
-    100% {transform:translateY(-200vh) translateX(40px);}
-}
+  /* ---------- HERO CARD (INBOX MOCKUP) ---------- */
+  .hero-card{
+    width:100%;height:100%;max-width:440px;border-radius:20px;padding:20px;background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,255,0.6));
+    box-shadow: 0 24px 60px rgba(11,52,130,0.08);backdrop-filter: blur(6px);position:relative;overflow:hidden;
+    border:1px solid rgba(255,255,255,0.6);
+  }
 
-/* ------------- HERO ------------- */
+  /* volumetric light / fog */
+  .volumetric{
+    position:absolute;left:-30%;top:-20%;width:160%;height:60%;pointer-events:none;
+    background: radial-gradient(closest-side, rgba(11,100,199,0.06), transparent 35%),
+                radial-gradient(closest-side, rgba(11,64,199,0.04), transparent 55%);
+    filter: blur(40px);mix-blend-mode:screen;opacity:0.95;transform:translateZ(0);
+  }
 
-.hero {
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:0 20px;
-    position:relative;
-    z-index:2;
-}
+  /* decorative abstract calligraphic strokes (SVG overlay) */
+  .calligraphic {
+    position:absolute;inset:0;opacity:0.07;pointer-events:none;mix-blend-mode:overlay;
+  }
 
-.hero::before {
-    content:"";
-    position:absolute;
-    width:900px;height:900px;
-    background:radial-gradient(circle,#fff,transparent);
-    top:-300px;left:-150px;
-    filter:blur(140px);
-    animation:glow 10s ease-in-out infinite;
-    z-index:-1;
-}
+  /* inbox mock rows */
+  .inbox-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .inbox-top .title{font-weight:700;color:var(--primary);font-size:16px}
+  .inbox-list{display:flex;flex-direction:column;gap:12px}
+  .email-row{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:rgba(255,255,255,0.6);box-shadow:0 6px 22px rgba(11,52,130,0.03)}
+  .email-left{display:flex;gap:12px;align-items:center}
+  .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#dfeffd,#eaf4ff);display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:700}
+  .email-meta{min-width:0}
+  .email-meta .from{font-weight:700;font-size:14px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+  .email-meta .snippet{color:var(--muted);font-size:13px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:200px}
 
-.logo {
-    font-size:64px;
-    font-weight:800;
-    animation:float 7s ease-in-out infinite, fadeUp 1s ease forwards;
-    letter-spacing:-2px;
-}
+  /* star-of-david motif (minimal) */
+  .motif {
+    position:absolute;right:-70px;top:10%;width:300px;height:300px;opacity:0.08;transform:rotate(10deg);pointer-events:none
+  }
 
-.tagline {
-    font-size:22px;
-    max-width:650px;
-    color:var(--textSoft);
-    margin-top:20px;
-    margin-bottom:40px;
-    animation:fadeUp 1.3s ease forwards;
-}
+  /* ---------- FEATURES ---------- */
+  .section{padding:68px 28px;background:linear-gradient(180deg, transparent, rgba(245,249,255,0.7))}
+  .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;max-width:1200px;margin:0 auto}
+  .feature{
+    background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(250,251,255,0.6));
+    border-radius:14px;padding:20px;border:1px solid rgba(8,16,38,0.04);box-shadow: 0 12px 34px rgba(11,52,130,0.04);
+  }
+  .feature h4{margin:0 0 8px}
+  .feature p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
 
-/* ------------- GLASS CARD ------------- */
+  /* ---------- FOOTER ---------- */
+  footer{padding:36px 28px;color:var(--muted);font-size:14px;text-align:center}
 
-.glass-card {
-    backdrop-filter:blur(18px);
-    background:var(--glass);
-    border:1px solid var(--glassBorder);
-    padding:24px 38px;
-    border-radius:var(--radius);
-    box-shadow:0 20px 50px rgba(0,0,0,0.08);
-    animation:fadeUp 1.5s ease forwards;
-}
+  /* ---------- PARTICLES LAYER ---------- */
+  #particles{position:fixed;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen}
+  .particle{position:absolute;border-radius:50%;opacity:0.9;will-change:transform,opacity}
 
-.request-btn {
-    margin-top:15px;
-    padding:16px 46px;
-    border:none;
-    border-radius:var(--radius);
-    background:#000;
-    color:white;
-    font-size:18px;
-    cursor:pointer;
-    transition:.25s ease;
-    box-shadow:0 8px 22px rgba(0,0,0,0.15);
-}
+  /* ---------- MODAL ---------- */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(4,10,20,0.45);display:flex;align-items:center;justify-content:center;z-index:120;backdrop-filter: blur(6px);opacity:0;pointer-events:none}
+  .modal{width:100%;max-width:520px;border-radius:14px;padding:22px;background:linear-gradient(180deg,#ffffff, #f7fbff);box-shadow:0 30px 80px rgba(4,10,20,0.5);transform:translateY(18px);opacity:0}
+  .modal h3{margin:0 0 8px}
+  .invite-input{display:flex;gap:8px;align-items:center;margin-top:12px}
+  .invite-input input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(8,16,38,0.06);font-size:15px}
+  .invite-input .submit{padding:11px 16px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--primary),var(--accent));color:white;font-weight:700;cursor:pointer}
+  .modal .hint{font-size:13px;color:var(--muted);margin-top:10px}
+  .modal.success{border:2px solid rgba(10,150,100,0.12)}
+  .modal .result{margin-top:14px;font-weight:700;color:var(--primary)}
 
-.request-btn:hover {
-    transform:translateY(-3px);
-    box-shadow:0 12px 30px rgba(0,0,0,0.22);
-}
-
-/* ------------- STAR OF DAVID BACKGROUND GRID ------------- */
-
-.grid {
-    position: absolute;
-    top:0;left:0;
-    width:100%;
-    height:100%;
-    background-image:
-      radial-gradient(circle at center, transparent 0%, transparent 94%, rgba(0,0,0,0.03) 100%),
-      repeating-linear-gradient(
-        60deg,
-        transparent,
-        transparent 40px,
-        rgba(0,0,0,0.03) 40px,
-        rgba(0,0,0,0.03) 41px
-      ),
-      repeating-linear-gradient(
-        -60deg,
-        transparent,
-        transparent 40px,
-        rgba(0,0,0,0.03) 40px,
-        rgba(0,0,0,0.03) 41px
-      );
-    opacity:.25;
-    z-index:1;
-    pointer-events:none;
-}
-
-/* ------------- CONTENT ------------- */
-
-.section {
-    padding:120px 20px;
-    text-align:center;
-}
-
-.section h2 {
-    font-size:36px;
-    margin-bottom:10px;
-    letter-spacing:-1px;
-    animation:fadeUp 1s ease forwards;
-}
-
-.section p {
-    max-width:750px;
-    margin:0 auto 40px auto;
-    font-size:19px;
-    line-height:1.65;
-    color:var(--textSoft);
-    animation:fadeUp 1.25s ease forwards;
-}
-
-/* ------------- FEATURE CARDS ------------- */
-
-.features {
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:35px;
-}
-
-.feature-card {
-    width:310px;
-    padding:28px;
-    border-radius:var(--radius);
-    border:1px solid var(--glassBorder);
-    background:var(--glass);
-    backdrop-filter:blur(16px);
-    box-shadow:0 15px 35px rgba(0,0,0,0.06);
-    animation:fadeUp 1.4s ease forwards;
-    transition:.3s ease;
-}
-
-.feature-card:hover {
-    transform:translateY(-6px);
-    box-shadow:0 18px 45px rgba(0,0,0,0.12);
-}
-
-.footer {
-    padding:50px;
-    text-align:center;
-    color:#888;
-    font-size:15px;
-}
-
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:980px){
+    .hero-inner{grid-template-columns:1fr}
+    .hero-card{order:-1;margin-bottom:20px;max-width:100%}
+    .logo{width:48px;height:48px}
+    .headline{font-size:34px}
+  }
 </style>
 </head>
+
 <body>
+<div class="wrap">
 
-<!-- PARTICLE LAYER -->
-<div id="particles"></div>
+  <!-- PARTICLES (canvas-like divs) -->
+  <div id="particles" aria-hidden="true"></div>
 
-<!-- GEOMETRIC GRID (tasteful Star-of-David motif) -->
-<div class="grid"></div>
+  <!-- subtle calligraphic SVG overlay (abstract strokes, not text) -->
+  <svg class="calligraphic" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="cg" x1="0" x2="1">
+        <stop offset="0" stop-color="#bfe1ff"/>
+        <stop offset="1" stop-color="#eaf6ff"/>
+      </linearGradient>
+      <filter id="blurG">
+        <feGaussianBlur stdDeviation="18" result="b"/>
+        <feColorMatrix result="c" type="matrix" values="0.8 0 0 0 0  0 0.85 0 0 0  0 0 0.95 0 0  0 0 0 0.6 0" />
+      </filter>
+    </defs>
 
-<!-- HERO -->
-<div class="hero">
-    <div class="logo">JewMail</div>
-    <div class="tagline">
-        Precision-engineered privacy.  
-        A private network for professionals who expect excellence.  
-        Invite-only access.
+    <!-- abstract flowing strokes (curves inspired by calligraphic brush, purely decorative) -->
+    <path d="M50 200 C180 60, 320 80, 480 160 S760 280, 950 200" stroke="url(#cg)" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.9" filter="url(#blurG)"/>
+    <path d="M150 420 C300 320, 440 360, 620 300 S900 240,1080 320" stroke="url(#cg)" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.8" filter="url(#blurG)"/>
+    <path d="M40 100 C180 10, 420 40, 660 120" stroke="url(#cg)" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.6" filter="url(#blurG)"/>
+  </svg>
+
+  <!-- geometric motif (minimal Star-of-David style) -->
+  <svg class="motif" viewBox="0 0 100 100" aria-hidden="true">
+    <g fill="#0b6bd6">
+      <polygon points="50,6 59,36 90,36 63,54 72,84 50,64 28,84 37,54 10,36 41,36" />
+    </g>
+  </svg>
+
+  <!-- header -->
+  <header>
+    <div class="brand" role="banner">
+      <div class="logo" aria-hidden="true">J</div>
+      <div>
+        <h1>JewMail</h1>
+        <p>Invite-only — premium private email</p>
+      </div>
     </div>
 
-    <div class="glass-card">
-        <div style="font-size:18px;margin-bottom:10px;">Request early access</div>
-        <button class="request-btn">Request Invite</button>
+    <div class="nav-actions" role="navigation" aria-label="Top actions">
+      <button class="btn" id="learnBtn">Learn</button>
+      <button class="btn" id="openInvite">Request Invite</button>
+      <button class="btn btn-primary" id="signupTop">Sign Up</button>
     </div>
-</div>
+  </header>
 
-<!-- FEATURES -->
-<div class="section">
-    <h2>Why JewMail?</h2>
-    <p>
-        A communication suite built around privacy, clarity, and a modern cultural aesthetic —
-        without noise, without clutter, without compromise.
-    </p>
+  <!-- hero -->
+  <main class="hero" role="main">
+    <div class="hero-inner" id="heroInner">
+      <div class="hero-left" aria-hidden="false">
+        <div class="kicker">Invite-only • curated members</div>
+        <h2 class="headline">Elegant. Private. For those who expect better.</h2>
+        <p class="sub">JewMail is a refined email platform combining modern cryptography, calming design, and an exclusive community. Blue-white luminous theme, abstract cultural geometry—tasteful and minimal.</p>
 
-    <div class="features">
+        <div class="hero-cta-row">
+          <div class="cta-input" aria-hidden="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:.9"><path d="M3 7v10a2 2 0 0 0 2 2h14" stroke="#0b3b82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7l-9 6L3 7" stroke="#0b3b82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="emailPreview" placeholder="yourname@domain.com" aria-label="preview email input" />
+            <button class="btn" id="previewBtn">Preview</button>
+          </div>
 
-        <div class="feature-card">
-            <h3 style="margin-bottom:10px;">True Privacy</h3>
-            <p>End-to-end encrypted communication.  
-            Zero tracking. Zero analytics.</p>
+          <button class="btn btn-primary" id="openInvite2">Request Invite</button>
+        </div>
+        <div class="small-hint">Try invite code <code style="background:#fff;padding:2px 6px;border-radius:6px;font-weight:700">JEW-ELITE-2025</code> in the modal to see success state.</div>
+      </div>
+
+      <div class="hero-card" role="region" aria-label="Inbox preview">
+        <div class="volumetric" aria-hidden="true"></div>
+
+        <!-- inbox header -->
+        <div class="inbox-top">
+          <div class="title">Inbox — JewMail Preview</div>
+          <div style="font-size:13px;color:var(--muted)">Secure • Private</div>
         </div>
 
-        <div class="feature-card">
-            <h3 style="margin-bottom:10px;">Luxury Experience</h3>
-            <p>Glass, gradients, and minimalism —  
-            a calm high-end interface for serious users.</p>
-        </div>
+        <!-- mock email list -->
+        <div class="inbox-list" id="inboxList" aria-hidden="false">
+          <div class="email-row">
+            <div class="email-left">
+              <div class="avatar">AL</div>
+              <div class="email-meta">
+                <div class="from">Alice Robertson</div>
+                <div class="snippet">Launch notes for the product — confidential draft attached.</div>
+              </div>
+            </div>
+            <div style="text-align:right;color:var(--muted);font-size:13px">2:14 PM</div>
+          </div>
 
-        <div class="feature-card">
-            <h3 style="margin-bottom:10px;">Invite-Only</h3>
-            <p>Curated, refined, trusted.  
-            Only verified members join JewMail.</p>
-        </div>
+          <div class="email-row">
+            <div class="email-left">
+              <div class="avatar">MJ</div>
+              <div class="email-meta">
+                <div class="from">M. Jacobs</div>
+                <div class="snippet">Quick sync? Available 10–11. Also encrypted attachment.</div>
+              </div>
+            </div>
+            <div style="text-align:right;color:var(--muted);font-size:13px">9:03 AM</div>
+          </div>
 
+          <div class="email-row">
+            <div class="email-left">
+              <div class="avatar">HQ</div>
+              <div class="email-meta">
+                <div class="from">HQ • JewMail</div>
+                <div class="snippet">Welcome to the private network — next steps and onboarding.</div>
+              </div>
+            </div>
+            <div style="text-align:right;color:var(--muted);font-size:13px">Yesterday</div>
+          </div>
+        </div>
+      </div>
     </div>
+  </main>
+
+  <!-- features -->
+  <section class="section" id="features">
+    <div style="max-width:1200px;margin:0 auto;text-align:center">
+      <h3 style="margin:0;font-size:28px">Designed for privacy and calm productivity</h3>
+      <p style="color:var(--muted);max-width:64ch;margin:8px auto 24px">A curated environment, polished UI, and modern cryptography—delivered with premium motion and atmosphere.</p>
+    </div>
+
+    <div class="features-grid" role="list">
+      <div class="feature" role="listitem">
+        <h4>End-to-End Encryption</h4>
+        <p>Every message encrypted client-side. Keys never leave your device unless you permit them.</p>
+      </div>
+      <div class="feature" role="listitem">
+        <h4>Curated Membership</h4>
+        <p>Invite-only community to keep the network trustworthy and signal-to-noise exceptionally low.</p>
+      </div>
+      <div class="feature" role="listitem">
+        <h4>Luxury UI</h4>
+        <p>Glass surfaces, soft volumetric lighting, and intentional motion to reduce friction and add calm.</p>
+      </div>
+      <div class="feature" role="listitem">
+        <h4>Abstract Cultural Motifs</h4>
+        <p>Tasteful geometric accents inspired by classical patterns—non-stereotypical, respectful, and contemporary.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer>
+    © 2025 JewMail — Built with privacy and refinement in mind.
+  </footer>
+
 </div>
 
-<div class="footer">
-    © 2025 JewMail — All rights reserved.
+<!-- INVITE MODAL -->
+<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="inviteTitle" id="modal">
+    <h3 id="inviteTitle">Request an Invite</h3>
+    <p class="hint">Enter your invite code (or try the demo code), then create a display name to preview the onboarding.</p>
+
+    <div class="invite-input" style="margin-top:10px">
+      <input id="inviteCode" placeholder="Invite code — e.g. JEW-ELITE-2025" aria-label="Invite code" />
+      <button class="submit" id="submitInvite">Unlock</button>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <input id="displayName" placeholder="Display name" aria-label="Display name" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(8,16,38,0.06)"/>
+      <button id="finishBtn" class="submit" style="background:linear-gradient(90deg,#0b3b82,#0b64c7);color:white;border:0">Join</button>
+    </div>
+
+    <div class="hint" id="modalHint">Demo invite code: <strong>JEW-ELITE-2025</strong></div>
+    <div class="result" id="modalResult" aria-live="polite" style="display:none"></div>
+  </div>
 </div>
 
-<!-- PARTICLE GENERATION SCRIPT -->
+<!-- ---------- SCRIPTS ---------- -->
 <script>
-const container = document.getElementById("particles");
+/* ---------------------------
+   PARTICLES + MOUSE REACTION
+   --------------------------- */
+(function(){
+  const container = document.getElementById('particles');
+  const colors = ['rgba(11,100,199,0.95)','rgba(11,64,199,0.75)','rgba(170,210,255,0.85)','rgba(255,255,255,0.9)'];
+  const count = Math.min(120, Math.floor(window.innerWidth/10));
+  const particles = [];
 
-for(let i=0;i<70;i++){
-    const p = document.createElement("div");
-    p.classList.add("particle");
-    p.style.left = Math.random()*100+"vw";
-    p.style.top = Math.random()*100+"vh";
-    p.style.animationDuration = (10 + Math.random()*10) + "s";
-    p.style.opacity = 0.1 + Math.random()*0.25;
-    container.appendChild(p);
-}
+  function rand(min,max){ return Math.random()*(max-min)+min }
+
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className='particle';
+    const size = rand(3,14);
+    el.style.width = size+'px';
+    el.style.height = size+'px';
+    el.style.left = rand(0,100)+'vw';
+    el.style.top = rand(0,100)+'vh';
+    el.style.background = colors[Math.floor(rand(0,colors.length))];
+    el.style.opacity = Math.min(0.95, rand(0.08, 0.65));
+    el.style.transform = `translate3d(0,0,0)`;
+    el.dataset.vx = rand(-0.02,0.02);
+    el.dataset.vy = rand(-0.05,-0.2);
+    container.appendChild(el);
+    particles.push(el);
+  }
+
+  // parallax on mouse move
+  let mx=0,my=0;
+  window.addEventListener('mousemove', (e)=>{
+    mx = (e.clientX / window.innerWidth) - 0.5;
+    my = (e.clientY / window.innerHeight) - 0.5;
+  });
+
+  function tick(){
+    for(const p of particles){
+      const vx = parseFloat(p.dataset.vx);
+      const vy = parseFloat(p.dataset.vy);
+      const curX = parseFloat(p.style.left);
+      const curY = parseFloat(p.style.top);
+      // subtle movement influenced by mouse
+      const nx = curX + vx* (1 + mx*6);
+      const ny = curY + vy* (1 + my*6);
+      // wraparound
+      p.style.left = (nx < -10) ? (110 + rand(0,10)) : ((nx>110) ? -10 : nx);
+      p.style.top = (ny < -20) ? (110 + rand(0,40)) : ((ny>110) ? -30 : ny);
+      // parallax transform
+      const px = mx * (parseFloat(p.style.width)/6);
+      const py = my * (parseFloat(p.style.height)/6);
+      p.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ---------------------------
+   GSAP MOTION FOR HIGHEST QUALITY
+   --------------------------- */
+window.addEventListener('load',()=>{
+  // animate entrance
+  if(window.gsap){
+    gsap.from('.logo',{y:-8,opacity:0,duration:1.2,ease:'power3.out'});
+    gsap.from('.headline',{y:18,opacity:0,duration:1.0,delay:0.2,ease:'power3.out'});
+    gsap.from('.sub',{y:18,opacity:0,duration:1.0,delay:0.35,ease:'power3.out'});
+    gsap.from('.hero-card',{y:30,opacity:0,duration:1.2,delay:0.45,ease:'power4.out'});
+    gsap.from('.feature',{y:26,opacity:0,duration:0.9,stagger:0.12,delay:0.6,ease:'power3.out'});
+    // floating gentle motion
+    gsap.to('.hero-card .volumetric',{x:60,y:-20,duration:12,repeat:-1,yoyo:true,ease:'sine.inOut',opacity:0.95});
+    gsap.to('.motif',{rotation:0,duration:18,repeat:-1,ease:'sine.inOut',yoyo:true});
+  }
+});
+
+/* ---------------------------
+   INVITE MODAL (front-end demo)
+   --------------------------- */
+(function(){
+  const openBtns = [document.getElementById('openInvite'), document.getElementById('openInvite2'), document.getElementById('signupTop')];
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modal = document.getElementById('modal');
+  const codeInput = document.getElementById('inviteCode');
+  const displayName = document.getElementById('displayName');
+  const submitBtn = document.getElementById('submitInvite');
+  const finishBtn = document.getElementById('finishBtn');
+  const result = document.getElementById('modalResult');
+
+  const DEMO_CODE = 'JEW-ELITE-2025';
+
+  function showModal(){
+    modalBackdrop.style.pointerEvents='auto';
+    modalBackdrop.style.opacity='1';
+    modalBackdrop.setAttribute('aria-hidden','false');
+    gsap.to(modal,{y:0,opacity:1,duration:0.45,ease:'power3.out'});
+  }
+
+  function hideModal(){
+    gsap.to(modal,{y:18,opacity:0,duration:0.25,ease:'power2.in',onComplete:()=>{
+      modalBackdrop.style.opacity='0';
+      modalBackdrop.style.pointerEvents='none';
+      modalBackdrop.setAttribute('aria-hidden','true');
+      result.style.display='none';
+    }});
+  }
+
+  openBtns.forEach(b => b && b.addEventListener('click', showModal));
+  modalBackdrop.addEventListener('click', (e)=>{
+    if(e.target === modalBackdrop) hideModal();
+  });
+
+  function showResult(success, message){
+    result.style.display = 'block';
+    result.textContent = message;
+    result.style.color = success ? 'green' : '#c0392b';
+    modal.classList.toggle('success', success);
+  }
+
+  submitBtn.addEventListener('click', ()=>{
+    const code = codeInput.value.trim();
+    if(!code){
+      showResult(false,'Please enter an invite code.');
+      return;
+    }
+    // demo validation
+    if(code.toUpperCase() === DEMO_CODE){
+      showResult(true,'Invite accepted. You may finish joining.');
+    } else {
+      showResult(false,'Invalid invite code. Request one from a current member.');
+    }
+  });
+
+  finishBtn.addEventListener('click', ()=>{
+    const name = (displayName.value||'').trim();
+    const code = (codeInput.value||'').trim().toUpperCase();
+    if(!name){ showResult(false,'Please enter a display name.'); return; }
+    if(code !== DEMO_CODE){ showResult(false,'Valid invite required to join.'); return; }
+    // simulate success
+    showResult(true, `Welcome, ${name}! A welcome message has been sent to ${name}@jewmail.local (demo).`);
+    // small celebratory animation
+    if(window.gsap) gsap.fromTo(result,{scale:0.98},{scale:1, duration:0.45, ease:'elastic.out(1,0.6)'});
+  });
+
+  // keyboard accessibility: Esc to close
+  window.addEventListener('keydown',(e)=>{ if(e.key === 'Escape') hideModal(); });
+
+  // "Preview" sample behaviour
+  document.getElementById('previewBtn').addEventListener('click', ()=>{
+    const v = document.getElementById('emailPreview').value.trim() || 'yourname@domain.com';
+    // animate a mock insertion into inbox
+    const list = document.getElementById('inboxList');
+    const row = document.createElement('div');
+    row.className = 'email-row';
+    row.innerHTML = `<div class="email-left"><div class="avatar">YO</div><div class="email-meta"><div class="from">You</div><div class="snippet">Preview inbox for <strong>${escapeHtml(v)}</strong></div></div></div><div style="text-align:right;color:var(--muted);font-size:13px">Now</div>`;
+    list.prepend(row);
+    // subtle pop
+    if(window.gsap) gsap.from(row,{y:8,opacity:0,duration:0.6,ease:'power3.out'});
+  });
+
+  // safe escaping helper for innerHTML used above
+  function escapeHtml(unsafe) {
+    return unsafe.replace(/[&<"'>]/g, function(m) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
+    });
+  }
+
+})();
+
+/* ---------------------------
+   small UX niceties
+   --------------------------- */
+(function(){
+  // reveal modal with initial short delay if user is idle (non-invasive)
+  let idleTimer;
+  function startIdle(){
+    idleTimer = setTimeout(()=> {
+      // no auto show — commented out to avoid surprise; leave for devs to enable
+      // document.getElementById('openInvite').click();
+    }, 25000);
+  }
+  startIdle();
+  window.addEventListener('mousemove', ()=>{ clearTimeout(idleTimer); startIdle(); }, {passive:true});
+})();
 </script>
-
 </body>
 </html>
