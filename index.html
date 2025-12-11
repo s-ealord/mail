@@ -3,201 +3,199 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>JewMail — Invite Only (Premium)</title>
+<title>JewMail — Invite Only (Hybrid Premium)</title>
 
-<!-- GSAP CDN -->
+<!-- Google font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- GSAP for animation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
 
 <style>
-  /* ---------- THEME / PALETTE ---------- */
   :root{
     --bg-1: #f8fbff;
     --bg-2: #eaf6ff;
-    --primary: #0b3b82; /* deep blue */
-    --accent: #0b64c7;  /* luminous blue */
+    --deep-blue: #06264a;
+    --primary-blue: #0b64c7;
+    --luminous: #77b8ff;
     --muted: #6b7280;
-    --glass: rgba(255,255,255,0.65);
-    --glass-2: rgba(255,255,255,0.5);
-    --radius: 16px;
-    --card-shadow: 0 20px 50px rgba(11,52,130,0.08);
+    --glass: rgba(255,255,255,0.62);
+    --glass-2: rgba(255,255,255,0.48);
+    --gold: #d4af37;
+    --radius: 18px;
   }
 
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0;
-    font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 60%);
-    color:#081026;
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(11,100,199,0.06), transparent 7%),
+      radial-gradient(800px 400px at 90% 80%, rgba(11,64,199,0.04), transparent 7%),
+      linear-gradient(160deg,var(--bg-1) 0%, var(--bg-2) 60%);
+    color:var(--deep-blue);
     overflow-x:hidden;
   }
 
-  /* ---------- LAYOUT ---------- */
+  /* container */
   .wrap{min-height:100vh;display:flex;flex-direction:column}
-  header{padding:28px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;z-index:40;position:relative}
-  .brand{display:flex;align-items:center;gap:14px}
-  .logo {
-    width:52px;height:52px;border-radius:12px;
-    background:linear-gradient(135deg, #ffffffee 0%, var(--accent) 100%);
-    box-shadow: 0 8px 28px rgba(11,52,130,0.12), inset 0 -8px 20px rgba(255,255,255,0.6);
-    display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:20px;
+
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;gap:12px;position:relative;z-index:40}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo-box{
+    width:56px;height:56px;border-radius:14px;
+    background:linear-gradient(135deg,#ffffff, rgba(255,255,255,0.95));
+    box-shadow: 0 10px 30px rgba(11,52,130,0.08), inset 0 -8px 20px rgba(255,255,255,0.6);
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--primary-blue);
+    font-size:20px;
   }
-  .brand h1{font-size:20px;margin:0;letter-spacing:-0.5px}
+  .brand h1{font-size:18px;margin:0}
   .brand p{margin:0;color:var(--muted);font-size:13px}
 
-  .nav-actions{display:flex;gap:12px;align-items:center}
-  .btn {
-    border:0;padding:10px 16px;border-radius:12px;background:transparent;color:var(--primary);cursor:pointer;font-weight:600;
-    transition:all .18s ease;
-  }
+  .header-actions{display:flex;gap:10px;align-items:center}
+  .btn{border:0;padding:10px 14px;border-radius:12px;background:transparent;color:var(--primary-blue);cursor:pointer;font-weight:700;transition:all .18s}
   .btn:hover{transform:translateY(-3px)}
-  .btn-primary{
-    background:linear-gradient(90deg,var(--primary),var(--accent));
-    color:white;box-shadow: 0 14px 40px rgba(11,52,130,0.16);
+  .btn-primary{background:linear-gradient(90deg,var(--primary-blue),var(--luminous));color:white;box-shadow:0 14px 44px rgba(11,52,130,0.14);padding:10px 16px}
+
+  /* flag badge */
+  .flag-badge{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:999px;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(250,250,255,0.6));border:1px solid rgba(11,52,130,0.06);box-shadow:0 8px 22px rgba(11,52,130,0.04)}
+  .flag-svgb{width:36px;height:22px;border-radius:3px;overflow:hidden;flex-shrink:0}
+  .flag-label{font-size:13px;color:var(--muted);font-weight:700}
+
+  /* hero */
+  .hero{min-height:82vh;display:flex;align-items:center;justify-content:center;padding:28px;position:relative;overflow:hidden}
+  .hero-inner{width:100%;max-width:1200px;display:grid;grid-template-columns:1fr 480px;gap:40px;align-items:center;z-index:20}
+
+  .left{
+    padding:28px 0;
   }
+  .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,#eAF4FF,#ffffff);color:var(--primary-blue);font-weight:800;margin-bottom:18px;font-size:13px}
+  .headline{font-size:46px;line-height:1.03;margin:0 0 14px;letter-spacing:-0.6px}
+  .sub{color:var(--muted);font-size:17px;margin:0 0 24px;max-width:64ch}
+  .cta-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 
-  /* ---------- HERO ---------- */
-  .hero{
-    position:relative;padding:28px;display:flex;align-items:center;justify-content:center;
-    min-height:78vh;overflow:visible;
-  }
+  .input-card{display:flex;gap:10px;background:var(--glass);backdrop-filter:blur(8px);padding:10px;border-radius:12px;border:1px solid rgba(8,16,38,0.04);box-shadow:0 12px 38px rgba(11,52,130,0.06);align-items:center}
+  .input-card input{border:0;background:transparent;padding:8px 10px;width:220px;font-size:15px;outline:none;color:var(--deep-blue)}
+  .hint{font-size:13px;color:var(--muted);margin-top:10px}
 
-  .hero-inner{
-    width:100%;max-width:1200px;display:grid;grid-template-columns:1fr 480px;gap:40px;align-items:center;z-index:10;
-  }
-
-  .hero-left{padding:36px 0}
-  .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,#eAF4FF, #ffffff);color:var(--primary);font-weight:700;margin-bottom:18px;font-size:13px}
-  .headline{font-size:44px;line-height:1.02;margin:0 0 14px}
-  .sub{color:var(--muted);font-size:17px;margin:0 0 24px;max-width:56ch}
-
-  .hero-cta-row{display:flex;gap:12px;align-items:center}
-  .cta-input{
-    display:flex;gap:8px;background:var(--glass);backdrop-filter: blur(8px);padding:10px;border-radius:12px;border:1px solid rgba(8,16,38,0.05);
-    align-items:center;box-shadow:var(--card-shadow);
-  }
-  .cta-input input{border:0;background:transparent;padding:8px 10px;width:220px;font-size:15px;outline:none}
-  .small-hint{font-size:13px;color:var(--muted);margin-top:8px}
-
-  /* ---------- HERO CARD (INBOX MOCKUP) ---------- */
+  /* hero card - inbox mock + volumetric lighting + soft orbs */
   .hero-card{
-    width:100%;height:100%;max-width:440px;border-radius:20px;padding:20px;background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,255,0.6));
-    box-shadow: 0 24px 60px rgba(11,52,130,0.08);backdrop-filter: blur(6px);position:relative;overflow:hidden;
-    border:1px solid rgba(255,255,255,0.6);
+    border-radius:22px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.88), rgba(250,251,255,0.7));
+    box-shadow:0 30px 80px rgba(11,52,130,0.09);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.6);
+    transform-style:preserve-3d;
   }
 
-  /* volumetric light / fog */
   .volumetric{
-    position:absolute;left:-30%;top:-20%;width:160%;height:60%;pointer-events:none;
-    background: radial-gradient(closest-side, rgba(11,100,199,0.06), transparent 35%),
-                radial-gradient(closest-side, rgba(11,64,199,0.04), transparent 55%);
-    filter: blur(40px);mix-blend-mode:screen;opacity:0.95;transform:translateZ(0);
+    position:absolute;left:-15%;top:-25%;width:140%;height:60%;pointer-events:none;background:
+      radial-gradient(400px 200px at 20% 30%, rgba(11,100,199,0.06), transparent 12%),
+      radial-gradient(300px 200px at 80% 70%, rgba(11,64,199,0.05), transparent 12%);
+    filter:blur(40px);mix-blend-mode:screen;opacity:0.95;transform:translateZ(0);
   }
 
-  /* decorative abstract calligraphic strokes (SVG overlay) */
-  .calligraphic {
-    position:absolute;inset:0;opacity:0.07;pointer-events:none;mix-blend-mode:overlay;
+  .orb{
+    position:absolute;width:220px;height:220px;border-radius:50%;filter:blur(40px);opacity:0.25;background:radial-gradient(circle,#bfe1ff,#eaf6ff);left:10%;top:20%;pointer-events:none;transform:translateZ(0)
   }
 
-  /* inbox mock rows */
-  .inbox-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-  .inbox-top .title{font-weight:700;color:var(--primary);font-size:16px}
-  .inbox-list{display:flex;flex-direction:column;gap:12px}
-  .email-row{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:rgba(255,255,255,0.6);box-shadow:0 6px 22px rgba(11,52,130,0.03)}
-  .email-left{display:flex;gap:12px;align-items:center}
-  .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#dfeffd,#eaf4ff);display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:700}
-  .email-meta{min-width:0}
-  .email-meta .from{font-weight:700;font-size:14px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
-  .email-meta .snippet{color:var(--muted);font-size:13px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:200px}
+  .inbox-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .inbox-title{font-weight:800;color:var(--primary-blue);font-size:16px}
+  .inbox-sub{font-size:13px;color:var(--muted)}
+  .inbox-list{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+  .email{
+    display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.75), rgba(250,250,255,0.6));
+    border:1px solid rgba(8,16,38,0.03);box-shadow:0 6px 22px rgba(11,52,130,0.03)
+  }
+  .left-meta{display:flex;gap:12px;align-items:center;min-width:0}
+  .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#eaf4ff,#dfeffd);display:flex;align-items:center;justify-content:center;color:var(--primary-blue);font-weight:800}
+  .email-from{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .email-snippet{color:var(--muted);font-size:13px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  /* star-of-david motif (minimal) */
-  .motif {
-    position:absolute;right:-70px;top:10%;width:300px;height:300px;opacity:0.08;transform:rotate(10deg);pointer-events:none
+  /* motif geometry - subtle Star of David grid */
+  .motif-grid{position:absolute;inset:0;opacity:0.06;pointer-events:none;background-image:
+    radial-gradient(circle at 15% 15%, rgba(11,64,199,0.06), transparent 6%),
+    repeating-linear-gradient(60deg, transparent, transparent 44px, rgba(11,64,199,0.03) 44px, rgba(11,64,199,0.03) 45px),
+    repeating-linear-gradient(-60deg, transparent, transparent 44px, rgba(11,64,199,0.03) 44px, rgba(11,64,199,0.03) 45px);
+    transform:translateZ(-1px);
   }
 
-  /* ---------- FEATURES ---------- */
-  .section{padding:68px 28px;background:linear-gradient(180deg, transparent, rgba(245,249,255,0.7))}
-  .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;max-width:1200px;margin:0 auto}
-  .feature{
-    background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(250,251,255,0.6));
-    border-radius:14px;padding:20px;border:1px solid rgba(8,16,38,0.04);box-shadow: 0 12px 34px rgba(11,52,130,0.04);
-  }
+  /* features section */
+  .section{padding:72px 28px;background:linear-gradient(180deg, transparent, rgba(245,249,255,0.6))}
+  .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;max-width:1200px;margin:18px auto 0}
+  .feature{background:linear-gradient(180deg, rgba(255,255,255,0.78), rgba(250,251,255,0.6));border-radius:14px;padding:20px;border:1px solid rgba(8,16,38,0.04);box-shadow:0 14px 36px rgba(11,52,130,0.04)}
   .feature h4{margin:0 0 8px}
   .feature p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
 
-  /* ---------- FOOTER ---------- */
+  /* footer */
   footer{padding:36px 28px;color:var(--muted);font-size:14px;text-align:center}
 
-  /* ---------- PARTICLES LAYER ---------- */
-  #particles{position:fixed;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen}
-  .particle{position:absolute;border-radius:50%;opacity:0.9;will-change:transform,opacity}
+  /* particles layer */
+  #particles{position:fixed;inset:0;z-index:10;pointer-events:none;mix-blend-mode:screen}
+  .particle{position:absolute;border-radius:50%;opacity:0.9;will-change:transform,opacity;pointer-events:none}
 
-  /* ---------- MODAL ---------- */
+  /* modal */
   .modal-backdrop{position:fixed;inset:0;background:rgba(4,10,20,0.45);display:flex;align-items:center;justify-content:center;z-index:120;backdrop-filter: blur(6px);opacity:0;pointer-events:none}
-  .modal{width:100%;max-width:520px;border-radius:14px;padding:22px;background:linear-gradient(180deg,#ffffff, #f7fbff);box-shadow:0 30px 80px rgba(4,10,20,0.5);transform:translateY(18px);opacity:0}
+  .modal{width:100%;max-width:520px;border-radius:14px;padding:22px;background:linear-gradient(180deg,#ffffff,#f7fbff);box-shadow:0 30px 80px rgba(4,10,20,0.45);transform:translateY(18px);opacity:0}
   .modal h3{margin:0 0 8px}
   .invite-input{display:flex;gap:8px;align-items:center;margin-top:12px}
   .invite-input input{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(8,16,38,0.06);font-size:15px}
-  .invite-input .submit{padding:11px 16px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--primary),var(--accent));color:white;font-weight:700;cursor:pointer}
+  .invite-input .submit{padding:11px 16px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--primary-blue),var(--luminous));color:white;font-weight:700;cursor:pointer}
   .modal .hint{font-size:13px;color:var(--muted);margin-top:10px}
   .modal.success{border:2px solid rgba(10,150,100,0.12)}
-  .modal .result{margin-top:14px;font-weight:700;color:var(--primary)}
+  .modal .result{margin-top:14px;font-weight:700;color:var(--primary-blue)}
 
-  /* ---------- RESPONSIVE ---------- */
+  /* responsive */
   @media (max-width:980px){
     .hero-inner{grid-template-columns:1fr}
-    .hero-card{order:-1;margin-bottom:20px;max-width:100%}
-    .logo{width:48px;height:48px}
+    .hero-card{max-width:100%}
     .headline{font-size:34px}
   }
+
 </style>
 </head>
-
 <body>
 <div class="wrap">
 
-  <!-- PARTICLES (canvas-like divs) -->
+  <!-- particles -->
   <div id="particles" aria-hidden="true"></div>
 
-  <!-- subtle calligraphic SVG overlay (abstract strokes, not text) -->
-  <svg class="calligraphic" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <linearGradient id="cg" x1="0" x2="1">
-        <stop offset="0" stop-color="#bfe1ff"/>
-        <stop offset="1" stop-color="#eaf6ff"/>
-      </linearGradient>
-      <filter id="blurG">
-        <feGaussianBlur stdDeviation="18" result="b"/>
-        <feColorMatrix result="c" type="matrix" values="0.8 0 0 0 0  0 0.85 0 0 0  0 0 0.95 0 0  0 0 0 0.6 0" />
-      </filter>
-    </defs>
-
-    <!-- abstract flowing strokes (curves inspired by calligraphic brush, purely decorative) -->
-    <path d="M50 200 C180 60, 320 80, 480 160 S760 280, 950 200" stroke="url(#cg)" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.9" filter="url(#blurG)"/>
-    <path d="M150 420 C300 320, 440 360, 620 300 S900 240,1080 320" stroke="url(#cg)" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.8" filter="url(#blurG)"/>
-    <path d="M40 100 C180 10, 420 40, 660 120" stroke="url(#cg)" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.6" filter="url(#blurG)"/>
-  </svg>
-
-  <!-- geometric motif (minimal Star-of-David style) -->
-  <svg class="motif" viewBox="0 0 100 100" aria-hidden="true">
-    <g fill="#0b6bd6">
-      <polygon points="50,6 59,36 90,36 63,54 72,84 50,64 28,84 37,54 10,36 41,36" />
-    </g>
-  </svg>
+  <!-- motif grid -->
+  <div class="motif-grid" aria-hidden="true"></div>
 
   <!-- header -->
   <header>
     <div class="brand" role="banner">
-      <div class="logo" aria-hidden="true">J</div>
+      <div class="logo-box" aria-hidden="true">J</div>
       <div>
         <h1>JewMail</h1>
-        <p>Invite-only — premium private email</p>
+        <p>Invite-only • Private • Premium</p>
       </div>
     </div>
 
-    <div class="nav-actions" role="navigation" aria-label="Top actions">
+    <div class="header-actions" role="navigation" aria-label="Top actions">
+      <!-- Flag badge: inline Israeli flag svg -->
+      <div class="flag-badge" title="Israeli design influence">
+        <div class="flag-svgb" aria-hidden="true">
+          <!-- Israeli flag SVG (inline, simple) -->
+          <svg viewBox="0 0 4 3" xmlns="http://www.w3.org/2000/svg" width="36" height="22" preserveAspectRatio="xMidYMid meet">
+            <rect width="4" height="3" fill="#fff"/>
+            <rect x="0" y="0" width="4" height="0.6" fill="#0b64c7"/>
+            <rect x="0" y="2.4" width="4" height="0.6" fill="#0b64c7"/>
+            <g transform="translate(2,1.5) scale(0.55)" fill="#0b64c7">
+              <!-- Star of David simplified -->
+              <polygon points="0,-0.6 0.52,0.3 -0.52,0.3"/>
+              <polygon points="0,-0.3 0.52,-0.45 -0.52,-0.45"/>
+              <polygon points="0,0.6 -0.52,-0.3 0.52,-0.3"/>
+              <polygon points="0,0.3 -0.52,0.45 0.52,0.45"/>
+            </g>
+          </svg>
+        </div>
+        <div class="flag-label">Israeli Palette</div>
+      </div>
+
       <button class="btn" id="learnBtn">Learn</button>
       <button class="btn" id="openInvite">Request Invite</button>
       <button class="btn btn-primary" id="signupTop">Sign Up</button>
@@ -206,63 +204,62 @@
 
   <!-- hero -->
   <main class="hero" role="main">
-    <div class="hero-inner" id="heroInner">
-      <div class="hero-left" aria-hidden="false">
+    <div class="hero-inner">
+      <div class="left">
         <div class="kicker">Invite-only • curated members</div>
-        <h2 class="headline">Elegant. Private. For those who expect better.</h2>
-        <p class="sub">JewMail is a refined email platform combining modern cryptography, calming design, and an exclusive community. Blue-white luminous theme, abstract cultural geometry—tasteful and minimal.</p>
+        <h2 class="headline">Elegant mail for those who expect privacy and craft.</h2>
+        <p class="sub">JewMail blends cryptographic rigor with premium design — luminous blue-and-white palettes, tasteful geometric motifs, and an exclusive community. Built for professionals.</p>
 
-        <div class="hero-cta-row">
-          <div class="cta-input" aria-hidden="false">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:.9"><path d="M3 7v10a2 2 0 0 0 2 2h14" stroke="#0b3b82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7l-9 6L3 7" stroke="#0b3b82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <input id="emailPreview" placeholder="yourname@domain.com" aria-label="preview email input" />
+        <div class="cta-row">
+          <div class="input-card" role="group" aria-label="Preview email">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7v10a2 2 0 0 0 2 2h14" stroke="#0b3b82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7l-9 6L3 7" stroke="#0b3b82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="emailPreview" placeholder="you@yourdomain.com" aria-label="Preview email address">
             <button class="btn" id="previewBtn">Preview</button>
           </div>
-
           <button class="btn btn-primary" id="openInvite2">Request Invite</button>
         </div>
-        <div class="small-hint">Try invite code <code style="background:#fff;padding:2px 6px;border-radius:6px;font-weight:700">JEW-ELITE-2025</code> in the modal to see success state.</div>
+
+        <div class="hint">Demo invite code: <code style="background:#fff;padding:4px 8px;border-radius:8px;font-weight:800">JEW-ELITE-2025</code></div>
       </div>
 
-      <div class="hero-card" role="region" aria-label="Inbox preview">
+      <div class="hero-card" aria-label="Inbox preview">
         <div class="volumetric" aria-hidden="true"></div>
+        <div class="orb" aria-hidden="true"></div>
 
-        <!-- inbox header -->
-        <div class="inbox-top">
-          <div class="title">Inbox — JewMail Preview</div>
-          <div style="font-size:13px;color:var(--muted)">Secure • Private</div>
+        <div class="inbox-head">
+          <div class="inbox-title">Inbox — JewMail Preview</div>
+          <div class="inbox-sub">Secure • Private</div>
         </div>
 
-        <!-- mock email list -->
-        <div class="inbox-list" id="inboxList" aria-hidden="false">
-          <div class="email-row">
-            <div class="email-left">
+        <div class="inbox-list" id="inboxList" aria-live="polite">
+          <div class="email">
+            <div class="left-meta">
               <div class="avatar">AL</div>
-              <div class="email-meta">
-                <div class="from">Alice Robertson</div>
-                <div class="snippet">Launch notes for the product — confidential draft attached.</div>
+              <div>
+                <div class="email-from">Alice Robertson</div>
+                <div class="email-snippet">Draft: Project launch notes — confidential attachments included.</div>
               </div>
             </div>
             <div style="text-align:right;color:var(--muted);font-size:13px">2:14 PM</div>
           </div>
 
-          <div class="email-row">
-            <div class="email-left">
+          <div class="email">
+            <div class="left-meta">
               <div class="avatar">MJ</div>
-              <div class="email-meta">
-                <div class="from">M. Jacobs</div>
-                <div class="snippet">Quick sync? Available 10–11. Also encrypted attachment.</div>
+              <div>
+                <div class="email-from">M. Jacobs</div>
+                <div class="email-snippet">Quick sync tomorrow? I've attached the encrypted deck.</div>
               </div>
             </div>
             <div style="text-align:right;color:var(--muted);font-size:13px">9:03 AM</div>
           </div>
 
-          <div class="email-row">
-            <div class="email-left">
+          <div class="email">
+            <div class="left-meta">
               <div class="avatar">HQ</div>
-              <div class="email-meta">
-                <div class="from">HQ • JewMail</div>
-                <div class="snippet">Welcome to the private network — next steps and onboarding.</div>
+              <div>
+                <div class="email-from">HQ • JewMail</div>
+                <div class="email-snippet">Welcome to JewMail — next steps and onboarding info enclosed.</div>
               </div>
             </div>
             <div style="text-align:right;color:var(--muted);font-size:13px">Yesterday</div>
@@ -275,51 +272,50 @@
   <!-- features -->
   <section class="section" id="features">
     <div style="max-width:1200px;margin:0 auto;text-align:center">
-      <h3 style="margin:0;font-size:28px">Designed for privacy and calm productivity</h3>
-      <p style="color:var(--muted);max-width:64ch;margin:8px auto 24px">A curated environment, polished UI, and modern cryptography—delivered with premium motion and atmosphere.</p>
+      <h3 style="margin:0;font-size:28px">Designed with privacy, craft, and culture in mind</h3>
+      <p style="color:var(--muted);max-width:64ch;margin:8px auto 24px">Tasteful geometric accents, subtle Hebrew-influenced curves, and a blue-white palette inspired by modern Israeli design. No stereotyping — only respect and craft.</p>
     </div>
 
     <div class="features-grid" role="list">
       <div class="feature" role="listitem">
         <h4>End-to-End Encryption</h4>
-        <p>Every message encrypted client-side. Keys never leave your device unless you permit them.</p>
+        <p>Client-side encryption and key control — only you hold your keys unless you share them.</p>
       </div>
       <div class="feature" role="listitem">
         <h4>Curated Membership</h4>
-        <p>Invite-only community to keep the network trustworthy and signal-to-noise exceptionally low.</p>
+        <p>Invite-only membership ensures a trusted network and meaningful communication.</p>
       </div>
       <div class="feature" role="listitem">
-        <h4>Luxury UI</h4>
-        <p>Glass surfaces, soft volumetric lighting, and intentional motion to reduce friction and add calm.</p>
+        <h4>Premium Design</h4>
+        <p>Glass surfaces, volumetric light, and calm motion reduce friction and increase focus.</p>
       </div>
       <div class="feature" role="listitem">
         <h4>Abstract Cultural Motifs</h4>
-        <p>Tasteful geometric accents inspired by classical patterns—non-stereotypical, respectful, and contemporary.</p>
+        <p>Geometric patterns and calligraphic-inspired strokes pay respectful aesthetic homage.</p>
       </div>
     </div>
   </section>
 
   <!-- footer -->
   <footer>
-    © 2025 JewMail — Built with privacy and refinement in mind.
+    © 2025 JewMail — Built with privacy, craft, and respect.
   </footer>
-
 </div>
 
-<!-- INVITE MODAL -->
+<!-- Invite modal -->
 <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="inviteTitle" id="modal">
     <h3 id="inviteTitle">Request an Invite</h3>
-    <p class="hint">Enter your invite code (or try the demo code), then create a display name to preview the onboarding.</p>
+    <p class="hint">Enter your invite code (demo code included) and a display name to preview the onboarding. This is a front-end demo; you can wire it to a backend later.</p>
 
     <div class="invite-input" style="margin-top:10px">
-      <input id="inviteCode" placeholder="Invite code — e.g. JEW-ELITE-2025" aria-label="Invite code" />
+      <input id="inviteCode" placeholder="Invite code — e.g. JEW-ELITE-2025" aria-label="Invite code">
       <button class="submit" id="submitInvite">Unlock</button>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:12px">
-      <input id="displayName" placeholder="Display name" aria-label="Display name" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(8,16,38,0.06)"/>
-      <button id="finishBtn" class="submit" style="background:linear-gradient(90deg,#0b3b82,#0b64c7);color:white;border:0">Join</button>
+      <input id="displayName" placeholder="Display name" aria-label="Display name" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(8,16,38,0.06)">
+      <button id="finishBtn" class="submit" style="background:linear-gradient(90deg,var(--primary-blue),var(--luminous));color:white;border:0">Join</button>
     </div>
 
     <div class="hint" id="modalHint">Demo invite code: <strong>JEW-ELITE-2025</strong></div>
@@ -327,15 +323,13 @@
   </div>
 </div>
 
-<!-- ---------- SCRIPTS ---------- -->
+<!-- scripts -->
 <script>
-/* ---------------------------
-   PARTICLES + MOUSE REACTION
-   --------------------------- */
+/* ------------------ PARTICLES + MOUSE PARALLAX ------------------ */
 (function(){
   const container = document.getElementById('particles');
-  const colors = ['rgba(11,100,199,0.95)','rgba(11,64,199,0.75)','rgba(170,210,255,0.85)','rgba(255,255,255,0.9)'];
-  const count = Math.min(120, Math.floor(window.innerWidth/10));
+  const colors = ['rgba(11,100,199,0.95)','rgba(11,64,199,0.8)','rgba(119,184,255,0.9)','rgba(255,255,255,0.9)'];
+  const count = Math.min(160, Math.floor(window.innerWidth/8));
   const particles = [];
 
   function rand(min,max){ return Math.random()*(max-min)+min }
@@ -343,26 +337,26 @@
   for(let i=0;i<count;i++){
     const el = document.createElement('div');
     el.className='particle';
-    const size = rand(3,14);
+    const size = rand(3,18);
     el.style.width = size+'px';
     el.style.height = size+'px';
     el.style.left = rand(0,100)+'vw';
     el.style.top = rand(0,100)+'vh';
     el.style.background = colors[Math.floor(rand(0,colors.length))];
-    el.style.opacity = Math.min(0.95, rand(0.08, 0.65));
+    el.style.opacity = Math.min(0.95, rand(0.06, 0.5));
+    el.style.filter = `blur(${rand(0,6)}px)`;
     el.style.transform = `translate3d(0,0,0)`;
-    el.dataset.vx = rand(-0.02,0.02);
-    el.dataset.vy = rand(-0.05,-0.2);
+    el.dataset.vx = rand(-0.01,0.01);
+    el.dataset.vy = rand(-0.04,-0.16);
     container.appendChild(el);
     particles.push(el);
   }
 
-  // parallax on mouse move
   let mx=0,my=0;
   window.addEventListener('mousemove', (e)=>{
     mx = (e.clientX / window.innerWidth) - 0.5;
     my = (e.clientY / window.innerHeight) - 0.5;
-  });
+  }, {passive:true});
 
   function tick(){
     for(const p of particles){
@@ -370,13 +364,11 @@
       const vy = parseFloat(p.dataset.vy);
       const curX = parseFloat(p.style.left);
       const curY = parseFloat(p.style.top);
-      // subtle movement influenced by mouse
-      const nx = curX + vx* (1 + mx*6);
-      const ny = curY + vy* (1 + my*6);
-      // wraparound
+      const nx = curX + vx * (1 + mx*6);
+      const ny = curY + vy * (1 + my*6);
       p.style.left = (nx < -10) ? (110 + rand(0,10)) : ((nx>110) ? -10 : nx);
-      p.style.top = (ny < -20) ? (110 + rand(0,40)) : ((ny>110) ? -30 : ny);
-      // parallax transform
+      p.style.top = (ny < -30) ? (110 + rand(0,40)) : ((ny>110) ? -30 : ny);
+      // subtle parallax offset
       const px = mx * (parseFloat(p.style.width)/6);
       const py = my * (parseFloat(p.style.height)/6);
       p.style.transform = `translate3d(${px}px, ${py}px, 0)`;
@@ -386,26 +378,44 @@
   tick();
 })();
 
-/* ---------------------------
-   GSAP MOTION FOR HIGHEST QUALITY
-   --------------------------- */
-window.addEventListener('load',()=>{
-  // animate entrance
+/* ------------------ GSAP MOTION / ENTRANCES / SCROLL ------------------ */
+window.addEventListener('load', ()=>{
   if(window.gsap){
-    gsap.from('.logo',{y:-8,opacity:0,duration:1.2,ease:'power3.out'});
-    gsap.from('.headline',{y:18,opacity:0,duration:1.0,delay:0.2,ease:'power3.out'});
-    gsap.from('.sub',{y:18,opacity:0,duration:1.0,delay:0.35,ease:'power3.out'});
-    gsap.from('.hero-card',{y:30,opacity:0,duration:1.2,delay:0.45,ease:'power4.out'});
-    gsap.from('.feature',{y:26,opacity:0,duration:0.9,stagger:0.12,delay:0.6,ease:'power3.out'});
-    // floating gentle motion
-    gsap.to('.hero-card .volumetric',{x:60,y:-20,duration:12,repeat:-1,yoyo:true,ease:'sine.inOut',opacity:0.95});
-    gsap.to('.motif',{rotation:0,duration:18,repeat:-1,ease:'sine.inOut',yoyo:true});
+    gsap.from('.logo-box',{y:-8,opacity:0,duration:1.2,ease:'power3.out'});
+    gsap.from('.headline',{y:22,opacity:0,duration:1.0,delay:0.12,ease:'power3.out'});
+    gsap.from('.sub',{y:18,opacity:0,duration:1.0,delay:0.28,ease:'power3.out'});
+    gsap.from('.hero-card',{y:28,opacity:0,duration:1.2,delay:0.38,ease:'power4.out'});
+    gsap.from('.feature',{y:28,opacity:0,duration:0.9,stagger:0.12,delay:0.5,ease:'power3.out'});
+
+    // gentle floating motion for orbs and volumetric light
+    gsap.to('.orb',{x:80,y:-30,duration:12,repeat:-1,yoyo:true,ease:'sine.inOut',opacity:0.32});
+    gsap.to('.volumetric',{x:40,y:10,duration:14,repeat:-1,yoyo:true,ease:'sine.inOut',opacity:0.95});
+
+    // small hover tilt on hero card
+    const card = document.querySelector('.hero-card');
+    if(card){
+      card.addEventListener('mousemove', (e)=>{
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(card, {rotationY: x * 6, rotationX: y * -6, duration:0.6, ease:'power3.out', transformPerspective:800, transformOrigin:'center'});
+      });
+      card.addEventListener('mouseleave', ()=> gsap.to(card,{rotationY:0,rotationX:0,duration:0.6,ease:'power3.out'}));
+    }
+
+    // scroll-trigger reveal for features
+    if(gsap && gsap.plugins && gsap.plugins.ScrollTrigger){
+      gsap.utils.toArray('.feature').forEach((el)=>{
+        gsap.from(el, {
+          scrollTrigger: { trigger: el, start: 'top 90%' },
+          y: 22, opacity: 0, duration: 0.8, ease: 'power3.out'
+        });
+      });
+    }
   }
 });
 
-/* ---------------------------
-   INVITE MODAL (front-end demo)
-   --------------------------- */
+/* ------------------ INVITE MODAL (demo front-end) ------------------ */
 (function(){
   const openBtns = [document.getElementById('openInvite'), document.getElementById('openInvite2'), document.getElementById('signupTop')];
   const modalBackdrop = document.getElementById('modalBackdrop');
@@ -424,7 +434,6 @@ window.addEventListener('load',()=>{
     modalBackdrop.setAttribute('aria-hidden','false');
     gsap.to(modal,{y:0,opacity:1,duration:0.45,ease:'power3.out'});
   }
-
   function hideModal(){
     gsap.to(modal,{y:18,opacity:0,duration:0.25,ease:'power2.in',onComplete:()=>{
       modalBackdrop.style.opacity='0';
@@ -435,9 +444,8 @@ window.addEventListener('load',()=>{
   }
 
   openBtns.forEach(b => b && b.addEventListener('click', showModal));
-  modalBackdrop.addEventListener('click', (e)=>{
-    if(e.target === modalBackdrop) hideModal();
-  });
+  modalBackdrop.addEventListener('click', (e)=>{ if(e.target === modalBackdrop) hideModal(); });
+  window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') hideModal(); });
 
   function showResult(success, message){
     result.style.display = 'block';
@@ -447,17 +455,10 @@ window.addEventListener('load',()=>{
   }
 
   submitBtn.addEventListener('click', ()=>{
-    const code = codeInput.value.trim();
-    if(!code){
-      showResult(false,'Please enter an invite code.');
-      return;
-    }
-    // demo validation
-    if(code.toUpperCase() === DEMO_CODE){
-      showResult(true,'Invite accepted. You may finish joining.');
-    } else {
-      showResult(false,'Invalid invite code. Request one from a current member.');
-    }
+    const code = (codeInput.value||'').trim().toUpperCase();
+    if(!code){ showResult(false,'Please enter an invite code.'); return; }
+    if(code === DEMO_CODE){ showResult(true,'Invite accepted. You may finish joining.'); }
+    else { showResult(false,'Invalid invite code. Request one from a current member.'); }
   });
 
   finishBtn.addEventListener('click', ()=>{
@@ -465,52 +466,33 @@ window.addEventListener('load',()=>{
     const code = (codeInput.value||'').trim().toUpperCase();
     if(!name){ showResult(false,'Please enter a display name.'); return; }
     if(code !== DEMO_CODE){ showResult(false,'Valid invite required to join.'); return; }
-    // simulate success
-    showResult(true, `Welcome, ${name}! A welcome message has been sent to ${name}@jewmail.local (demo).`);
-    // small celebratory animation
-    if(window.gsap) gsap.fromTo(result,{scale:0.98},{scale:1, duration:0.45, ease:'elastic.out(1,0.6)'});
+    showResult(true, `Welcome, ${name}! (demo)`);
+    if(window.gsap) gsap.fromTo(result,{scale:0.96},{scale:1, duration:0.5, ease:'elastic.out(1,0.6)'});
   });
 
-  // keyboard accessibility: Esc to close
-  window.addEventListener('keydown',(e)=>{ if(e.key === 'Escape') hideModal(); });
-
-  // "Preview" sample behaviour
+  // preview button behaviour
   document.getElementById('previewBtn').addEventListener('click', ()=>{
-    const v = document.getElementById('emailPreview').value.trim() || 'yourname@domain.com';
-    // animate a mock insertion into inbox
+    const v = document.getElementById('emailPreview').value.trim() || 'you@yourdomain.com';
     const list = document.getElementById('inboxList');
     const row = document.createElement('div');
-    row.className = 'email-row';
-    row.innerHTML = `<div class="email-left"><div class="avatar">YO</div><div class="email-meta"><div class="from">You</div><div class="snippet">Preview inbox for <strong>${escapeHtml(v)}</strong></div></div></div><div style="text-align:right;color:var(--muted);font-size:13px">Now</div>`;
+    row.className = 'email';
+    row.innerHTML = `<div class="left-meta"><div class="avatar">YO</div><div><div class="email-from">You</div><div class="email-snippet">Preview inbox for <strong>${escapeHtml(v)}</strong></div></div></div><div style="text-align:right;color:var(--muted);font-size:13px">Now</div>`;
     list.prepend(row);
-    // subtle pop
     if(window.gsap) gsap.from(row,{y:8,opacity:0,duration:0.6,ease:'power3.out'});
   });
 
-  // safe escaping helper for innerHTML used above
-  function escapeHtml(unsafe) {
-    return unsafe.replace(/[&<"'>]/g, function(m) {
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
-    });
-  }
-
+  function escapeHtml(unsafe){ return unsafe.replace(/[&<"'>]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]; }) }
 })();
 
-/* ---------------------------
-   small UX niceties
-   --------------------------- */
+/* ------------------ small UX niceties ------------------ */
 (function(){
-  // reveal modal with initial short delay if user is idle (non-invasive)
+  // subtle idle invitation (disabled by default to avoid surprise UX)
   let idleTimer;
-  function startIdle(){
-    idleTimer = setTimeout(()=> {
-      // no auto show — commented out to avoid surprise; leave for devs to enable
-      // document.getElementById('openInvite').click();
-    }, 25000);
-  }
+  function startIdle(){ idleTimer = setTimeout(()=>{/*document.getElementById('openInvite').click();*/},35000); }
   startIdle();
   window.addEventListener('mousemove', ()=>{ clearTimeout(idleTimer); startIdle(); }, {passive:true});
 })();
 </script>
 </body>
 </html>
+l
